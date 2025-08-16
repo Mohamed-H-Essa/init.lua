@@ -42,13 +42,16 @@ vim.keymap.set("n", "<M-H>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
 -- end)
 
 -- Flutter specific keybindings
-vim.keymap.set("n", "<leader>fr", ":FlutterRun<CR>")
+vim.keymap.set("n", "<leader>fa", ":FlutterRun<CR>")
 vim.keymap.set("n", "<leader>fq", ":FlutterQuit<CR>")
 vim.keymap.set("n", "<leader>fr", ":FlutterReload<CR>")
 vim.keymap.set("n", "<leader>fR", ":FlutterRestart<CR>")
 vim.keymap.set("n", "<leader>fd", ":FlutterDevices<CR>")
 vim.keymap.set("n", "<leader>fo", ":FlutterOutlineToggle<CR>")
 -- Flutter end
+
+-- open vim messages
+vim.keymap.set("n", "<leader>m", ":messages<CR>")
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
