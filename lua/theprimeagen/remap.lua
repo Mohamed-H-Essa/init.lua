@@ -53,9 +53,9 @@ vim.keymap.set("n", "<leader>fo", ":FlutterOutlineToggle<CR>")
 -- open vim messages
 vim.keymap.set("n", "<leader>m", ":messages<CR>")
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")-- this jumps to the next item in the quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz") -- what this does is it jumps to the next item in the quickfix list
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -73,17 +73,17 @@ vim.keymap.set(
     "oassert.NoError(err, \"\")<Esc>F\";a"
 )
 
-vim.keymap.set(
-    "n",
-    "<leader>ef",
-    "oif err != nil {<CR>}<Esc>Olog.Fatalf(\"error: %s\\n\", err.Error())<Esc>jj"
-)
-
-vim.keymap.set(
-    "n",
-    "<leader>el",
-    "oif err != nil {<CR>}<Esc>O.logger.Error(\"error\", \"error\", err)<Esc>F.;i"
-)
+-- vim.keymap.set(
+--     "n",
+--     "<leader>ef",
+--     "oif err != nil {<CR>}<Esc>Olog.Fatalf(\"error: %s\\n\", err.Error())<Esc>jj"
+-- )
+--
+-- vim.keymap.set(
+--     "n",
+--     "<leader>el",
+--     "oif err != nil {<CR>}<Esc>O.logger.Error(\"error\", \"error\", err)<Esc>F.;i"
+-- )
 
 vim.keymap.set("n", "<leader>ca", function()
     require("cellular-automaton").start_animation("make_it_rain")
@@ -92,4 +92,63 @@ end)
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+-- Copilot Chat keybindings
+vim.keymap.set("n", "<leader>cco", ":CopilotChatOpen<CR>")          -- Open chat
+vim.keymap.set("n", "<leader>ccc", ":CopilotChatClose<CR>")         -- Close chat
+vim.keymap.set("n", "<leader>cct", ":CopilotChatToggle<CR>")        -- Toggle chat
+vim.keymap.set("n", "<leader>ccr", ":CopilotChatReset<CR>")         -- Reset chat
+
+-- Quick actions
+
+-- vim.keymap.set("v", "<leader>ccf", ":CopilotChatFixDiagnostic<CR>") -- Fix diagnostics
+-- vim.keymap.set("v", "<leader>cco", ":CopilotChatOptimize<CR>")      -- Optimize code
+-- vim.keymap.set("v", "<leader>ccd", ":CopilotChatDocs<CR>")          -- Generate docs
+-- vim.keymap.set("v", "<leader>cct", ":CopilotChatTests<CR>")         -- Generate tests
+
+-- Interactive chat
+vim.keymap.set("n", "<leader>cci", function()
+    local input = vim.fn.input("Ask Copilot: ")
+    if input ~= "" then
+        vim.cmd("CopilotChat " .. input)
+    end
+end)
+-- Tab navigation (add these to your remap):
+vim.keymap.set("n", "gt", ":tabnext<CR>")           -- Next tab
+vim.keymap.set("n", "gT", ":tabprev<CR>")           -- Previous tab
+vim.keymap.set("n", "<leader>tn", ":tabnew<CR>")    -- New tab
+vim.keymap.set("n", "<leader>tc", ":tabclose<CR>")  -- Close tab
+
+-- Or use numbers:
+vim.keymap.set("n", "<leader>1", "1gt")             -- Go to tab 1
+vim.keymap.set("n", "<leader>2", "2gt")             -- Go to tab 2
+vim.keymap.set("n", "<leader>3", "3gt")             -- Go to tab 3
+vim.keymap.set("n", "<leader>4", "4gt")             -- Go to tab 4
+vim.keymap.set("n", "<leader>5", "5gt")             -- Go to tab 5
+
+ -- Create splits
+vim.keymap.set("n", "<leader>sv", ":vsplit<CR>")    -- Vertical split
+vim.keymap.set("n", "<leader>sh", ":split<CR>")     -- Horizontal split
+vim.keymap.set("n", "<leader>sc", ":close<CR>")     -- Close current split
+
+-- Navigate between splits
+vim.keymap.set("n", "<C-h>", "<C-w>h")              -- Go left
+vim.keymap.set("n", "<C-j>", "<C-w>j")              -- Go down
+vim.keymap.set("n", "<C-k>", "<C-w>k")              -- Go up
+vim.keymap.set("n", "<C-l>", "<C-w>l")              -- Go right
+
+-- Move splits around
+vim.keymap.set("n", "<leader>wH", "<C-w>H")         -- Move split far left
+vim.keymap.set("n", "<leader>wJ", "<C-w>J")         -- Move split far down
+vim.keymap.set("n", "<leader>wK", "<C-w>K")         -- Move split far up
+vim.keymap.set("n", "<leader>wL", "<C-w>L")         -- Move split far right
+-- Or use Option (Meta) key if easier to reach:
+vim.keymap.set("n", "<M-=>", ":resize +2<CR>")                  -- Option + = to grow
+vim.keymap.set("n", "<M-->", ":resize -2<CR>")                  -- Option + - to shrink
+vim.keymap.set("n", "<M-]>", ":vertical resize +2<CR>")         -- Option + ] to widen
+vim.keymap.set("n", "<M-[>", ":vertical resize -2<CR>")         -- Option + [ to narrow
+
+
+
+
+
 
