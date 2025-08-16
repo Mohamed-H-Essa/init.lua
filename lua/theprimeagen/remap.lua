@@ -58,7 +58,7 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz") -- what this does is it jumps to the next item in the quickfix list
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>ss", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set(
@@ -141,14 +141,23 @@ vim.keymap.set("n", "<leader>wH", "<C-w>H")         -- Move split far left
 vim.keymap.set("n", "<leader>wJ", "<C-w>J")         -- Move split far down
 vim.keymap.set("n", "<leader>wK", "<C-w>K")         -- Move split far up
 vim.keymap.set("n", "<leader>wL", "<C-w>L")         -- Move split far right
+
+-- Maximize current split (very useful)
+vim.keymap.set("n", "<leader>sm", "<C-w>_<C-w>|")       -- Maximize current split
+vim.keymap.set("n", "<leader>se", "<C-w>=")             -- Equalize all splits
+
+-- Quick split + file operations
+vim.keymap.set("n", "<leader>so", "<C-w>o")             -- Close all other splits
+
 -- Or use Option (Meta) key if easier to reach:
 vim.keymap.set("n", "<M-=>", ":resize +2<CR>")                  -- Option + = to grow
 vim.keymap.set("n", "<M-->", ":resize -2<CR>")                  -- Option + - to shrink
 vim.keymap.set("n", "<M-]>", ":vertical resize +2<CR>")         -- Option + ] to widen
 vim.keymap.set("n", "<M-[>", ":vertical resize -2<CR>")         -- Option + [ to narrow
 
-
-
+-- I like these for workflow
+vim.keymap.set("n", "<leader>to", ":tabonly<CR>")       -- Close all other tabs
+vim.keymap.set("n", "<leader>sx", ":topleft 30vsplit | Ex<CR>")
 
 
 
