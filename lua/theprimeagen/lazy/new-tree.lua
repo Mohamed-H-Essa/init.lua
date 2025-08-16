@@ -212,6 +212,6 @@ return {
         -- Keymaps - using your existing keymap style
         vim.keymap.set("n", "<leader>sx", ":Neotree toggle left<CR>", { desc = "Toggle Neo-tree" })
         vim.keymap.set("n", "<leader>e", ":Neotree focus<CR>", { desc = "Focus Neo-tree" })
-        vim.keymap.set("n", "<leader>gs", ":Neotree float git_status<CR>", { desc = "Git status" })
+        -- vim.keymap.set("n", "<leader>gs", ":Neotree float git_status<CR>", { desc = "Git status" })
     end,
 }
