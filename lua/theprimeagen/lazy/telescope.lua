@@ -15,15 +15,42 @@ return {
                 entry_prefix = "  ",              -- Spacing for entries
 
                 -- Enable file icons (requires nvim-web-devicons)
-                file_ignore_patterns = {         -- Files/folders to ignore
+                -- FLUTTER-SPECIFIC IGNORE PATTERNS
+                file_ignore_patterns = {
+                    -- Build and generated directories
+                    "android/",
+                    "ios/",
+                    "linux/",
+                    "macos/",
+                    "windows/",
+                    "web/",
+                    "build/",
+                    ".dart_tool/",
+
+                    -- Dependencies and caches
                     "node_modules/",
                     ".git/",
-                    ".dart_tool/",               -- Flutter build files
-                    "build/",                    -- Flutter/Android build
-                    -- "*.lock",                    -- Lock files
-                    ".flutter-plugins*",         -- Flutter plugin files
-                },
+                    "%.lock",
 
+                    -- Flutter specific generated files
+                    "%.g.dart$",           -- Generated files (json_serializable, etc.)
+                    "%.freezed.dart$",     -- Freezed generated files
+                    "%.gr.dart$",          -- Auto Route generated files
+                    "%.config.dart$",      -- Config generated files
+                    "%.mocks.dart$",       -- Mockito generated files
+
+                    -- Flutter plugin and build files
+                    ".flutter%-plugins",
+                    ".flutter%-plugins%-dependencies",
+                    ".packages",
+                    ".metadata",
+
+                    -- IDE and misc
+                    ".vscode/",
+                    ".idea/",
+                    "*.iml",
+                    ".DS_Store",
+                },
                 -- Layout and appearance
                 layout_config = {
                     horizontal = {
@@ -47,12 +74,39 @@ return {
                 find_files = {
                     -- Show hidden files but ignore .git
                     hidden = true,
+                   -- Use fd if available (much faster)
+                    find_command = {
+                        "fd",
+                        "--type", "f",
+                        "--strip-cwd-prefix",
+                        "--exclude", "android",
+                        "--exclude", "ios",
+                        "--exclude", "linux",
+                        "--exclude", "macos",
+                        "--exclude", "windows",
+                        "--exclude", "web",
+                        "--exclude", "build",
+                        "--exclude", ".dart_tool"
+                    },
                 },
 
                 live_grep = {
-                    -- Additional grep options for Flutter
+                    -- Focus on lib/ directory primarily
                     additional_args = function(opts)
-                        return {"--hidden"}      -- Search in hidden files
+                        return {
+                            "--exclude-dir=android",
+                            "--exclude-dir=ios",
+                            "--exclude-dir=linux",
+                            "--exclude-dir=macos",
+                            "--exclude-dir=windows",
+                            "--exclude-dir=web",
+                            "--exclude-dir=build",
+                            "--exclude-dir=.dart_tool",
+                            "--exclude=*.g.dart",
+                            "--exclude=*.freezed.dart",
+                            "--exclude=*.gr.dart",
+                            "--exclude=*.mocks.dart"
+                        }
                     end
                 },
 
@@ -71,32 +125,68 @@ return {
         -- Your existing keybindings (unchanged)
         local builtin = require('telescope.builtin')
 
-        -- File finding
-        vim.keymap.set('n', '<leader>pf', builtin.find_files, {})    -- Project files
-        vim.keymap.set('n', '<C-p>', builtin.git_files, {})          -- Git files only
+        -- FLUTTER-OPTIMIZED KEYMAPS
+        -- Primary file finding (searches only relevant Flutter files)
+        vim.keymap.set('n', '<leader>pf', builtin.find_files, { desc = "Find Flutter files" })
 
-        -- Text searching
-        vim.keymap.set('n', '<leader>pws', function()               -- Search word under cursor
+        -- Git files (naturally excludes build directories)
+        vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = "Git files" })
+
+        -- Search specifically in lib/ directory (main Flutter code)
+        vim.keymap.set('n', '<leader>pl', function()
+            builtin.find_files({
+                cwd = "lib/",
+                prompt_title = "Flutter Lib Files"
+            })
+        end, { desc = "Find files in lib/" })
+
+        -- Search in test/ directory
+        vim.keymap.set('n', '<leader>pt', function()
+            builtin.find_files({
+                cwd = "test/",
+                prompt_title = "Flutter Test Files"
+            })
+        end, { desc = "Find test files" })
+
+        -- Text searching (with Flutter exclusions)
+        vim.keymap.set('n', '<leader>ps', function()
+            builtin.grep_string({ search = vim.fn.input("Grep > ") })
+        end, { desc = "Search text" })
+
+        vim.keymap.set('n', '<leader>pws', function()
             local word = vim.fn.expand("<cword>")
             builtin.grep_string({ search = word })
-        end)
+        end, { desc = "Search word under cursor" })
 
-        vim.keymap.set('n', '<leader>pWs', function()               -- Search WORD under cursor (includes punctuation)
+        vim.keymap.set('n', '<leader>pWs', function()
             local word = vim.fn.expand("<cWORD>")
             builtin.grep_string({ search = word })
-        end)
+        end, { desc = "Search WORD under cursor" })
 
+        -- Live grep (real-time search)
+        vim.keymap.set('n', '<leader>pg', builtin.live_grep, { desc = "Live grep" })
 
-        vim.keymap.set('n', '<leader>ps', function()                -- Interactive search
-            builtin.grep_string({ search = vim.fn.input("Grep > ") })
-        end)
+        -- Live grep in lib/ only
+        vim.keymap.set('n', '<leader>pgl', function()
+            builtin.live_grep({
+                cwd = "lib/",
+                prompt_title = "Live Grep in Lib"
+            })
+        end, { desc = "Live grep in lib/" })
 
-        -- Help and other
-        vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})    -- Vim help
+        -- Other useful pickers
+        vim.keymap.set('n', '<leader>pb', builtin.buffers, { desc = "Find buffers" })
+        vim.keymap.set('n', '<leader>po', builtin.oldfiles, { desc = "Recent files" })
+        vim.keymap.set('n', '<leader>pr', builtin.resume, { desc = "Resume search" })
+        vim.keymap.set('n', '<leader>vh', builtin.help_tags, { desc = "Help tags" })
 
-        -- Additional useful keybindings (optional)
-        -- vim.keymap.set('n', '<leader>pb', builtin.buffers, {})      -- Open buffers
-        -- vim.keymap.set('n', '<leader>pr', builtin.resume, {})       -- Resume last search
-        -- vim.keymap.set('n', '<leader>pg', builtin.live_grep, {})    -- Live text search
+        -- Flutter-specific: Search for widgets/classes
+        vim.keymap.set('n', '<leader>pw', function()
+            builtin.live_grep({
+                default_text = "class.*Widget",
+                prompt_title = "Find Widgets"
+            })
+        end, { desc = "Find Widget classes" })
+
     end
 }
